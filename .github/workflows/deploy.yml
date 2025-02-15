@@ -2,16 +2,15 @@ name: Deploy - Frontend and Backend
 
 on:
   workflow_run:
-    workflows: ["CI – Build, Test, and Docker (Backend)", "CI – Build, Test, and Docker (Frontend)"]  # Must match the CI workflow name exactly
+    workflows: ["CI – Build, Test, and Docker (Backend)", "CI – Build, Test, and Docker (Frontend)"]
     types:
       - completed
 
 env: 
-  VERSION: "0.1.0"
   REGISTRY: ghcr.io
   SERVER_SIDE_BACKEND_URL: https://otel-cookbook.com # will be overwritten through docker compose file to point to localhost on the VM
   NEXT_PUBLIC_BACKEND_URL: https://otel-cookbook.com
-  TAG: ${{ env.VERSION }}-${{ github.sha }}
+  TAG: 0.1.0-${{ github.sha }} # update tag for new version release
     
 jobs:
   build-frontend-docker-image:

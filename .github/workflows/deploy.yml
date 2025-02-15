@@ -89,7 +89,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    name: Deploy Backend
+    name: Deploy
     needs: 
       - build-frontend-docker-image
       - build-backend-docker-image
@@ -103,7 +103,6 @@ jobs:
       - name: Substitute EnvVars
         run: |
           envsubst < deployment/docker-compose.yml > deployment/docker-compose.subst.yml
-
 
       - name: Copy Files to VPS
         uses: appleboy/scp-action@v0.1.7

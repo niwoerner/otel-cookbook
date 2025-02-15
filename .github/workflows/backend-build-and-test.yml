@@ -21,8 +21,8 @@ jobs:
         with:
           path: |
             ~/go/pkg/mod
-            ./vendor
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+            backend/vendor
+          key: ${{ runner.os }}-go-${{ hashFiles('backend/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
 
@@ -33,17 +33,21 @@ jobs:
 
       - name: Download Go modules
         run: go mod download
+        working-directory: backend
 
       - name: Build
         run: make build
+        working-directory: backend
 
       - name: Test
         run: make test
+        working-directory: backend
 
       - name: Lint
         uses: golangci/golangci-lint-action@v6
         with:
           version: v1.60
+        working-directory: backend
 
   govulncheck-backend:
     runs-on: ubuntu-latest
@@ -56,7 +60,7 @@ jobs:
         uses: golang/govulncheck-action@v1
         with:
           go-version-input: ${{ env.GO_VERSION }}
-          go-package: ./...
+          go-package: ./backend/...
 
   build-docker-image-backend:
     needs: build-and-test-backend
@@ -93,6 +97,6 @@ jobs:
           platforms: linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          context: ./
+          context: ./backend
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:cache
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:cache,mode=max

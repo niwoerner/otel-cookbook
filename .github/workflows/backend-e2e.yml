@@ -1,4 +1,4 @@
-name: E2E – Backend
+name: E2E – Tests (Backend)
 
 on:
   workflow_dispatch:

@@ -29,21 +29,21 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('otel-builder/package-lock.json') }}
+          key: ${{ runner.os }}-npm-${{ hashFiles('frontend/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
 
       - name: Install dependencies
         run: npm ci
-        working-directory: otel-builder
+        working-directory: frontend
 
       - name: Lint
         run: npm run lint
-        working-directory: otel-builder
+        working-directory: frontend
 
       # - name: Test
       #   run: npm test
-      #   working-directory: otel-builder
+      #   working-directory: frontend
 
   build-docker-image-frontend:
     needs: build-and-test-frontend
@@ -80,7 +80,7 @@ jobs:
           platforms: linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          context: ./otel-builder
+          context: ./frontend
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:cache
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:cache,mode=max
           build-args: |

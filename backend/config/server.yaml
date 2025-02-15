@@ -1,0 +1,5 @@
+log-level: debug
+host: "0.0.0.0" # listen on all network interfaces not only localhost
+port: 8888
+version: "1.0.0"
+server-shutdown-timeout: 5s

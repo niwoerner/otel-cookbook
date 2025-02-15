@@ -64,7 +64,7 @@ jobs:
         with:
           go-version-input: ${{ env.GO_VERSION }}
           go-package: ./...
-          working-directory: backend
+          work-dir: backend
 
   build-docker-image-backend:
     needs: build-and-test-backend

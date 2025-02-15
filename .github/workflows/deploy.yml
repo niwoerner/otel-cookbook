@@ -122,7 +122,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd deployments/${{ github.repository }}
+            cd deployments/${{ github.repository }}/deployment/
             export GH_API_TOKEN=${{ secrets.GH_API_TOKEN }}
             docker compose -f docker-compose.subst.yml pull
             # docker compose -f docker-compose.subst.yml up -d

@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 8 * * *'  # Every day at 8am UTC
-  workflow_run:
-    workflows: ["CD"]
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: ["CD"]
+  #   types:
+  #     - completed
 
 jobs:
   e2e:

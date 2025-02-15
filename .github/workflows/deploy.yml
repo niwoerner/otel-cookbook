@@ -2,7 +2,7 @@ name: Deploy - Frontend and Backend
 
 on:
   workflow_run:
-    workflows: ["CI – Build, Test, and Docker (Backend)", "CI – Build, Test, and Docker (Frontend)"]
+    workflows: ["CI"]
     types:
       - completed
 

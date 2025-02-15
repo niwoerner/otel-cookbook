@@ -1,7 +1,10 @@
 name: CI – Build, Test, and Docker (Backend)
 
 on:
-  workflow_dispatch:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 env:
   GO_VERSION: "1.23"
@@ -10,6 +13,9 @@ env:
 
 jobs:
   build-and-test-backend:
+    defaults:
+      run:
+        working-directory: ./backend
     runs-on: ubuntu-latest
     name: Build and Test Backend
     steps:
@@ -21,7 +27,7 @@ jobs:
         with:
           path: |
             ~/go/pkg/mod
-            backend/vendor
+            ./vendor
           key: ${{ runner.os }}-go-${{ hashFiles('backend/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
@@ -33,21 +39,17 @@ jobs:
 
       - name: Download Go modules
         run: go mod download
-        working-directory: backend
 
       - name: Build
         run: make build
-        working-directory: backend
 
       - name: Test
         run: make test
-        working-directory: backend
 
       - name: Lint
         uses: golangci/golangci-lint-action@v6
         with:
           version: v1.60
-        working-directory: backend
 
   govulncheck-backend:
     runs-on: ubuntu-latest

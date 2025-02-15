@@ -1,0 +1,65 @@
+services:
+  frontend:
+    image: ghcr.io/niwoerner/otel-builder-frontend/frontend:main
+    environment:
+      - PORT=3000
+      - SERVER_SIDE_BACKEND_URL=http://backend:8888
+      - NEXT_PUBLIC_BACKEND_URL=https://otel-cookbook.com
+      - GH_API_TOKEN=$GH_API_TOKEN
+    expose:
+      - "3000"
+    depends_on:
+      - backend
+    restart: always
+    networks:
+      - app-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  backend:
+    image: ghcr.io/niwoerner/otel-builder-backend/backend:main
+    environment:
+      - PORT=8888
+      - ENV_NAME=dev
+    expose:
+      - "8888"
+    restart: always
+    volumes:
+      - sqlite_db:/app/data/
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "wget", "-f", "http://localhost:8888/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    depends_on:
+      - frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d   # Nginx configuration files
+      - ./nginx/certs:/etc/nginx/certs       # SSL certificates
+    restart: always
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  sqlite_db:

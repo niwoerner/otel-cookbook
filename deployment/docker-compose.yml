@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: ghcr.io/niwoerner/otel-builder-frontend/frontend:main
+    image: $REGISTRY/$GITHUB_REPOSITORY/frontend:$TAG
     environment:
       - PORT=3000
       - SERVER_SIDE_BACKEND_URL=http://backend:8888
@@ -20,7 +20,7 @@ services:
         max-file: "3"
 
   backend:
-    image: ghcr.io/niwoerner/otel-builder-backend/backend:main
+    image: $REGISTRY/$GITHUB_REPOSITORY/backend:$TAG
     environment:
       - PORT=8888
       - ENV_NAME=dev
@@ -51,8 +51,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d   # Nginx configuration files
-      - ./nginx/certs:/etc/nginx/certs       # SSL certificates
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/certs:/etc/nginx/certs
     restart: always
     networks:
       - app-network

@@ -10,8 +10,8 @@ env:
   REGISTRY: ghcr.io
   SERVER_SIDE_BACKEND_URL: https://otel-cookbook.com # will be overwritten through docker compose file to point to localhost on the VM
   NEXT_PUBLIC_BACKEND_URL: https://otel-cookbook.com
-  TAG: 0.1.0-${{ github.sha }} # update tag for new version release
-    
+  TAG: 0.1.0-${{ github.run_id }} # update tag for a new version release
+
 jobs:
   build-frontend-docker-image:
     runs-on: ubuntu-latest
@@ -52,17 +52,6 @@ jobs:
             "SERVER_SIDE_BACKEND_URL=${{ env.SERVER_SIDE_BACKEND_URL }}"
             "GH_API_TOKEN=${{ secrets.GH_API_TOKEN }}"
 
-  deploy-frontend:
-    runs-on: ubuntu-latest
-    name: Deploy Frontend
-    needs: build-frontend-docker-image
-    if: ${{ github.event.workflow_run.head_branch == 'main' }}
-    environment:
-      name: prod 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
   build-backend-docker-image:
     runs-on: ubuntu-latest
     name: Build Backend Docker Image
@@ -98,13 +87,43 @@ jobs:
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:cache
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:cache,mode=max
 
-  deploy-backend:
+  deploy:
     runs-on: ubuntu-latest
     name: Deploy Backend
-    needs: build-backend-docker-image
+    needs: 
+      - build-frontend-docker-image
+      - build-backend-docker-image
     if: ${{ github.event.workflow_run.head_branch == 'main' }}
     environment:
       name: prod 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Substitute EnvVars
+        run: |
+          envsubst < deployment/docker-compose.yml > deployment/docker-compose.subst.yml
+
+
+      - name: Copy Files to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          source: "deployment/*"
+          target: "deployments/${{ github.repository }}/"
+
+      - name: Docker Compose
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd deployments/${{ github.repository }}
+            export GH_API_TOKEN=${{ secrets.GH_API_TOKEN }}
+            docker compose -f docker-compose.subst.yml pull
+            # docker compose -f docker-compose.subst.yml up -d

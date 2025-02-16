@@ -97,4 +97,4 @@ jobs:
 
         - name: Run Gixy Docker command
           run: |
-            docker run --rm -v "${{ github.workspace }}/deployment/nginx/conf.d/app.conf:/etc/nginx/conf/nginx.conf" getpagespeed/gixy /etc/nginx/conf/nginx.conf
+            docker run --rm -v "${{ github.workspace }}/deployment/nginx/conf.d/app.conf:/etc/nginx/conf/nginx.conf" getpagespeed/gixy:v0.2.1 /etc/nginx/conf/nginx.conf

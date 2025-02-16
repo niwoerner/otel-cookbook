@@ -91,8 +91,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Validate Nginx Config
     if: ${{ github.event.workflow_run.head_branch == 'main' }}
-    environment:
-      name: prod 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -104,6 +102,7 @@ jobs:
   check-port:
     runs-on: ubuntu-latest
     name: Check if Port 22 is Open
+    if: ${{ github.event.workflow_run.head_branch == 'main' }}
     outputs:
       port_open: ${{ steps.check.outputs.port_open }}
     steps:
@@ -125,6 +124,7 @@ jobs:
       - build-frontend-docker-image
       - build-backend-docker-image
       - check-port
+      - validate-nginx-config
     if: ${{ github.event.workflow_run.head_branch == 'main' && needs.check-port.outputs.port_open == 'true' }}
     environment:
       name: prod 
@@ -154,7 +154,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd deployments/${{ github.repository }}/deployment/
+            cd deployments/${{ github.repository }}/deployment/nginx
 
             REQUIRED_NGINX_FILES="certs/cf-origin.crt certs/cf-origin.key conf.d/app.conf"
             for file in $REQUIRED_NGINX_FILES; do

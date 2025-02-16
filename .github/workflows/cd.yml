@@ -154,9 +154,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd deployments/${{ github.repository }}/deployment/nginx
+            cd deployments/${{ github.repository }}/deployment
 
-            REQUIRED_NGINX_FILES="certs/cf-origin.crt certs/cf-origin.key conf.d/app.conf"
+            REQUIRED_NGINX_FILES="nginx/certs/cf-origin.crt nginx/certs/cf-origin.key nginx/conf.d/app.conf"
             for file in $REQUIRED_NGINX_FILES; do
               if [ ! -f "$file" ]; then
                 echo "Error: Required NGINX file '$file' not found. Ensure those are present before starting the app."

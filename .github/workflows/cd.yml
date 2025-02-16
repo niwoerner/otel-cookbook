@@ -166,4 +166,4 @@ jobs:
 
             export GH_API_TOKEN=${{ secrets.GH_API_TOKEN }}
             docker compose -f docker-compose.subst.yml pull
-            # docker compose -f docker-compose.subst.yml up -d
+            docker compose -f docker-compose.subst.yml up -d

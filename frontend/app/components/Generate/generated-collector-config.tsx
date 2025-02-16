@@ -11,7 +11,6 @@ import { basicSetup } from "codemirror";
 import { useAtom } from "jotai";
 import { Check, Clipboard } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import useSWR from "swr";
 import { Button } from "../../../components/button";

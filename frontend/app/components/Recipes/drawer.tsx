@@ -2,6 +2,7 @@
 
 import { OtelCollectorRecipe } from "@/app/models/otel.collector.recipes.model";
 import { revalidateStatistics } from "@/app/recipes/action";
+import { LoadingSpinner } from "@/components/loading-spinner";
 import { Skeleton } from "@/components/skeleton";
 import { apiClient } from "@/lib/apiClient";
 import { postRecipeUsage } from "@/lib/const";
@@ -44,7 +45,7 @@ export default function RecipeDetailsDrawer({
   showDrawer,
   setShowDrawer,
 }: RecipeDetailsDrawerProps) {
-  const router = useRouter()
+  const router = useRouter();
 
   const handleUseRecipeClick = async () => {
     try {
@@ -60,7 +61,7 @@ export default function RecipeDetailsDrawer({
     } catch (error) {
       console.error("Error adding recipe usage event to databse", error);
     }
-    router.push("/recipes/wizard?name=" + recipeDetails.name)
+    router.push("/recipes/wizard?name=" + recipeDetails.name);
   };
 
   //Image Navigation Buttons
@@ -122,7 +123,9 @@ export default function RecipeDetailsDrawer({
                         <div>
                           <div className="relative">
                             {!isImageLoaded && (
-                              <Skeleton className="block aspect-[10/7] w-full rounded-lg object-cover" />
+                              <Skeleton className="flex items-center justify-center aspect-[10/7] w-full rounded-lg object-cover">
+                                <LoadingSpinner size={32} />
+                              </Skeleton>
                             )}
                             <Image
                               src={recipeDetails.images[currentImageIndex]}

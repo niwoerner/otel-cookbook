@@ -11,6 +11,7 @@ import { basicSetup } from "codemirror";
 import { useAtom } from "jotai";
 import { Check, Clipboard } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import useSWR from "swr";
 import { Button } from "../../../components/button";
@@ -21,7 +22,6 @@ import {
   isNoComponentsSelected,
   OtelCollector,
 } from "../../models/otel.builder.config.model";
-import { redirect } from "next/navigation";
 
 // SWR fetcher
 async function fetchBuilderConfig(collector: OtelCollector) {
@@ -75,10 +75,12 @@ export const YamlPreview = () => {
   const [builderYaml, setBuilderYaml] = useState<string>("");
   const [runConfigYaml, setRunConfigYaml] = useState<string>("");
   const [otelCollector] = useAtom(otelCollectorAtom);
-
+  console.log("otel collector is", otelCollector)
+  console.log("is no  components slected", isNoComponentsSelected(otelCollector))
+  const router = useRouter();
   if (isNoComponentsSelected(otelCollector)) {
-    console.warn("Otel collector is empty. Redirecting to Generate page.");
-    redirect("/");
+    console.log("Otel collector is empty. Redirecting to Generate page.");
+    router.push("/");
   }
 
   // Only fetch if we have a valid collector (not null/undefined)

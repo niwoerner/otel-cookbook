@@ -40,7 +40,6 @@ export const apiClient = async <T>(
 
   // Check if cache hit
   if (cache[cacheKey] && cache[cacheKey].expiration > Date.now()) {
-    console.log(`Cache hit for ${cacheKey}`);
     return cache[cacheKey].data as T;
   }
 
@@ -59,8 +58,6 @@ export const apiClient = async <T>(
           ? endpoint
           : `${SERVER_SIDE_BACKEND_URL}${endpoint}`;
       }
-
-      console.log("sending request to url: ", url);
 
       // Add GitHub token if the request is to the GitHub API
       const isGitHubApi =
@@ -127,7 +124,6 @@ export const apiClient = async <T>(
       // Store the cache
       if (isGitHubApi) {
         cache[cacheKey] = { data: result, expiration: cacheDuration };
-        console.log(`Cached response for ${cacheKey}`);
       }
 
       return result;

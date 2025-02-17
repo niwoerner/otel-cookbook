@@ -75,11 +75,10 @@ export const YamlPreview = () => {
   const [builderYaml, setBuilderYaml] = useState<string>("");
   const [runConfigYaml, setRunConfigYaml] = useState<string>("");
   const [otelCollector] = useAtom(otelCollectorAtom);
-  console.log("otel collector is", otelCollector)
-  console.log("is no  components slected", isNoComponentsSelected(otelCollector))
+
   const router = useRouter();
   if (isNoComponentsSelected(otelCollector)) {
-    console.log("Otel collector is empty. Redirecting to Generate page.");
+    console.warn("Otel collector is empty. Redirecting to Generate page.");
     router.push("/");
   }
 

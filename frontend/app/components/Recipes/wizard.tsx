@@ -8,7 +8,7 @@ import {
 import { useState } from "react";
 import RecipeIngredientsWizard from "./wizard-ingredients";
 import RecipePreparationWizard from "./wizard-preparation";
-import RecipeTastingWizard from "./wizard-tasting";
+import RecipeTastingWizard from "./wizard-review";
 
 export type RecipeOverviewWizardProps = {
   recipe: OtelCollectorRecipe;
@@ -17,7 +17,7 @@ export type RecipeOverviewWizardProps = {
 const recipeInstructionsOrder = [
   { id: "01", name: "Ingredients 🧄", href: "#", status: "complete" },
   { id: "02", name: "Preparation 🥣", href: "#", status: "current" },
-  { id: "03", name: "Tasting 😋", href: "#", status: "upcoming" },
+  { id: "03", name: "Review 😋", href: "#", status: "upcoming" },
 ];
 
 export default function RecipeOverviewWizard({

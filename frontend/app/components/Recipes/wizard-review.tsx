@@ -10,8 +10,9 @@ import {
   CardTitle,
 } from "../../../components/card";
 import { Button } from "../../../components/button";
+import Link from "next/link";
 
-export default function RecipeTastingWizard({
+export default function RecipeReviewWizard({
   recipe,
 }: RecipeOverviewWizardProps) {
   const preparation = extractRecipeSection(
@@ -43,7 +44,7 @@ export default function RecipeTastingWizard({
           <CardContent className="space-y-6">
             <div className="bg-gray-50 rounded-lg p-6">
               <p className="text-lg text-gray-800 leading-relaxed">
-                We hope you liked this OpenTelemetry collector recipe!
+                We hope you liked the taste of this recipe! If you have any <span className="font-semibold">suggestions</span> to make the recipe even tastier, please create an issue in <Link className="text-blue-600 hover:underline" href={ghRecipeUrl}> GitHub</Link>.
               </p>
             </div>
 

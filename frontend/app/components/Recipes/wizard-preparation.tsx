@@ -148,6 +148,7 @@ export default function RecipePreparationWizard({
                     </div>
                   )}
                 </div>
+                <p className="text-sm text-muted-foreground"><span className="font-semibold">Edit</span> and <span className="font-semibold">copy</span> your collector config here!</p>
 
                 <div className="mt-4">
                   <div className="relative rounded-lg border border-gray-500 p-2 bg-gray-800 min-h-[439px]">
@@ -164,6 +165,7 @@ export default function RecipePreparationWizard({
                     <div className="absolute top-2 right-2">
                       <Button
                         variant="ghost"
+                        className="hover:bg-zinc-700 right-4 bg-transparent "
                         size="icon"
                         onClick={copyToClipboard}
                       >

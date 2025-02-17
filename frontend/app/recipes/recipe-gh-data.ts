@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/apiClient";
-import { GHRepoPath } from "@/lib/const";
+import { GHRepoPath, otelBuilderGHRepo } from "@/lib/const";
 import { format } from "date-fns";
 import { load } from "js-yaml";
 import {
@@ -71,6 +71,8 @@ export async function getRecipeListDetails(
     getMetadata(recipeName),
   ]);
 
+  const githubRepoUrl = otelBuilderGHRepo + "/tree/main/" + recipeName;
+
   const otelCollectorRecipe: OtelCollectorRecipe = {
     id: Math.random().toString(16).slice(2),
     name: recipeName,
@@ -80,13 +82,15 @@ export async function getRecipeListDetails(
     description: description,
     collectorConfigs: collectorConfigs,
     images: getImageUrls(recipeDirContents),
-    githubRepoUrl: "",
+    githubRepoUrl: githubRepoUrl,
   };
 
   return otelCollectorRecipe;
 }
 
-export async function getRecipeWizardDetails(recipeName: string): Promise<OtelCollectorRecipe | undefined>{
+export async function getRecipeWizardDetails(
+  recipeName: string
+): Promise<OtelCollectorRecipe | undefined> {
   const [commitDetails, recipeDirContents] = await Promise.all([
     getCommitInfo(recipeName),
     apiClient<GithubRepoFileContents[]>(
@@ -94,26 +98,26 @@ export async function getRecipeWizardDetails(recipeName: string): Promise<OtelCo
     ),
   ]);
 
-    const [collectorConfigs, description] = await Promise.all([
-      getCollectorConfigs(recipeName, recipeDirContents),
-      getDescription(recipeName),
-    ]);
+  const [collectorConfigs, description] = await Promise.all([
+    getCollectorConfigs(recipeName, recipeDirContents),
+    getDescription(recipeName),
+  ]);
 
-    const otelCollectorRecipe: OtelCollectorRecipe = {
-      id: Math.random().toString(16).slice(2),
-      name: recipeName,
-      author: commitDetails.author,
-      lastUpdatedAt: commitDetails.lastUpdatedAt,
-      description: description,
-      collectorConfigs: collectorConfigs,
-      
-      // Below values are not needed in the recipe wizard for now
-      metadata: {} as OtelCollectorRecipeMetadata,
-      images: [],
-      githubRepoUrl: "",
-    };
+  const otelCollectorRecipe: OtelCollectorRecipe = {
+    id: Math.random().toString(16).slice(2),
+    name: recipeName,
+    author: commitDetails.author,
+    lastUpdatedAt: commitDetails.lastUpdatedAt,
+    description: description,
+    collectorConfigs: collectorConfigs,
 
-    return otelCollectorRecipe
+    // Below values are not needed in the recipe wizard for now
+    metadata: {} as OtelCollectorRecipeMetadata,
+    images: [],
+    githubRepoUrl: "",
+  };
+
+  return otelCollectorRecipe;
 }
 
 // ==========================================

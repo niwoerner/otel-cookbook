@@ -54,7 +54,7 @@ export default async function Dashboard() {
             Generate Builder Config
           </h2>
           <div className="text-md text-muted-foreground mt-1">
-            Configure your OpenTelemetry collector distibution here.
+            Configure your OpenTelemetry collector distribution here.
           </div>
         </div>
       </div>

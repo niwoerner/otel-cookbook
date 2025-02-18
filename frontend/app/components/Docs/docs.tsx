@@ -111,7 +111,7 @@ export const Docs = () => {
               <br></br>
               <br></br>
               If you have any collector configurations you like to use and think
-              others could benefit from, please share them as share as a recipe.{" "}
+              others could benefit from, please consider sharing them as a recipe.{" "}
               <br />
               <br />
               To add a recipe, all you need to do is open a pull request{" "}

@@ -125,8 +125,7 @@ export default function OtelCollectorComponentsTable({
           <Checkbox
             color="blue"
             checked={
-              table.getIsAllPageRowsSelected() ||
-              table.getIsSomePageRowsSelected()
+              table.getIsAllPageRowsSelected()
             }
             onChange={(value) => {
               table.toggleAllRowsSelected(!!value);

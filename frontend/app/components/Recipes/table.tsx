@@ -323,6 +323,11 @@ export function OtelCollectorRecipeTable({
               aria-label="Previous page"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
+              className={`${
+                !table.getCanPreviousPage()
+                  ? "cursor-not-allowed opacity-50"
+                  : "hover:cursor-pointer"
+              }`}
             >
               <svg
                 className="stroke-current"
@@ -450,6 +455,11 @@ export function OtelCollectorRecipeTable({
               aria-label="Next page"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
+              className={`${
+                !table.getCanNextPage()
+                  ? "cursor-not-allowed opacity-50"
+                  : "hover:cursor-pointer"
+              }`}
             >
               <p className="text-lg">Next</p>
               <svg

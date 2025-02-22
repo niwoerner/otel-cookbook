@@ -258,7 +258,7 @@ export default function DashboardSidebar({ DashboardContent }: PageProps) {
           </div>
         </div>
 
-        <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 2xl:hidden">
+        <div className="sticky top-0 z-40 flex items-center gap-x-6 backdrop-blur-3xl px-4 py-4 shadow-sm sm:px-6 2xl:hidden">
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}

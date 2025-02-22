@@ -1,12 +1,10 @@
 "use client";
 import { otelCollectorAtom } from "@/app/atoms/otel.builder.config.atom";
 import {
-  isNoComponentsSelected,
-  RunConfig,
+  RunConfig
 } from "@/app/models/otel.builder.config.model";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useState } from "react";
-import Notification from "../notification-popup";
 import CollectorConfigPopup from "./collector-config-popup";
 
 const runConfigs: { id: RunConfig; title: string }[] = [
@@ -15,22 +13,11 @@ const runConfigs: { id: RunConfig; title: string }[] = [
 ];
 
 const RunConfigSection = () => {
-  const [showWarning, setShowWarning] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
-  const [otelCollector, setOtelCollector] = useAtom(otelCollectorAtom);
+  const setOtelCollector = useSetAtom(otelCollectorAtom);
   const [runConfig, setRunConfig] = useState<RunConfig>("binary");
 
   const handleOnStartClick = () => {
-    if (
-      isNoComponentsSelected(otelCollector) &&
-      !otelCollector.BuilderConfig.debugMode
-    ) {
-      setShowWarning(true);
-
-      setTimeout(() => {
-        setShowWarning(false);
-      }, 5000);
-    } else {
       setOtelCollector((prev) => ({
         ...prev,
         BuilderConfig: {
@@ -40,7 +27,6 @@ const RunConfigSection = () => {
       }));
 
       setOpenPopup(true);
-    }
   };
 
   return (
@@ -84,13 +70,6 @@ const RunConfigSection = () => {
       >
         Generate
       </button>
-      <Notification
-        type="warning"
-        heading="No Components Selected"
-        description="Please select at least one component for your collector."
-        showNotification={showWarning}
-        setShowNotification={setShowWarning}
-      />
       <CollectorConfigPopup openPopup={openPopup} setOpenPopup={setOpenPopup} />
     </div>
   );

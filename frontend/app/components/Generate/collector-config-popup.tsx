@@ -1,5 +1,6 @@
 "use client";
 import { otelCollectorAtom } from "@/app/atoms/otel.builder.config.atom";
+import { isNoComponentsSelected } from "@/app/models/otel.builder.config.model";
 import { yaml } from "@codemirror/lang-yaml";
 import { Diagnostic, linter } from "@codemirror/lint";
 import {
@@ -15,7 +16,7 @@ import { useAtom } from "jotai";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { validateCollectorConfig } from "./collector-config-validation";
-import Notification from "../notification-popup";
+import CollectorConfigWarningPopup from "./collector-config-warning-popup";
 
 interface CollectorConfigPopupProps {
   openPopup: boolean;
@@ -129,6 +130,28 @@ export default function CollectorConfigPopup({
     }
   };
 
+  const [showNoSelectionWarning, setShowNoSelectionWarning] = useState(false);
+  const handleApplyClick = () => {
+    if (
+      isNoComponentsSelected(otelCollector) &&
+      !otelCollector.BuilderConfig.debugMode
+    ) {
+      setShowNoSelectionWarning(true);
+    } else {
+      setOtelCollector((prev) => ({
+        ...prev,
+        CollectorConfig: {
+          ...prev.CollectorConfig,
+          Ports: ports,
+          DockerImageName: prev.BuilderConfig.collectorName,
+          Manifest: configYaml,
+        },
+      }));
+      setOpenPopup(false);
+      redirect("/preview");
+    }
+  };
+
   return (
     <Dialog open={openPopup} onClose={setOpenPopup} className="relative z-10">
       <DialogBackdrop
@@ -158,17 +181,13 @@ export default function CollectorConfigPopup({
                 {otelCollector.BuilderConfig.runConfig === "docker" && (
                   <div className="mt-8 text-left">
                     <h4 className="text-lg font-medium text-gray-900">
-                      Deployment Configuration
+                      Docker Configuration
                     </h4>
-                    <p className="mt-2 text-sm text-gray-600">
-                      Configure Docker container and image settings
-                    </p>
-
                     <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <div>
                         <label
                           htmlFor="grpc-port"
-                          className="block text-sm font-medium text-gray-700"
+                          className="block text-md font-medium text-gray-700"
                         >
                           Ports (as comma separated list)
                         </label>
@@ -178,7 +197,7 @@ export default function CollectorConfigPopup({
                             id="ports"
                             value={ports}
                             onChange={handlePortsChange}
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-md"
                             placeholder={ports}
                           />
                         </div>
@@ -186,7 +205,7 @@ export default function CollectorConfigPopup({
                       <div>
                         <label
                           htmlFor="docker-image-name"
-                          className="block text-sm font-medium text-gray-700"
+                          className="block text-md font-medium text-gray-700"
                         >
                           Image Name
                         </label>
@@ -196,7 +215,7 @@ export default function CollectorConfigPopup({
                             id="docker-image-name"
                             value={dockerImageName}
                             onChange={(e) => setDockerImageName(e.target.value)}
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-md"
                             placeholder={
                               otelCollector.BuilderConfig.collectorName
                             }
@@ -228,15 +247,14 @@ export default function CollectorConfigPopup({
                       </p>
                     </div>
                   </div>
-                  <p className="mt-4 text-sm text-gray-600">
-                    You can create and validate your configuration below. Use
+                  <p className="mt-4 text-md text-gray-600">
+                    You can create and validate your configuration below. Use{" "}
                     <a
                       href="https://github.com/open-telemetry/opentelemetry-collector-releases"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 hover:underline"
                     >
-                      {" "}
                       otelbin{" "}
                     </a>
                     for more comprehensive validation capabilities.{" "}
@@ -259,20 +277,8 @@ export default function CollectorConfigPopup({
             <div className="mt-8 sm:mt-10 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-4">
               <button
                 type="button"
-                onClick={() => {
-                  setOtelCollector((prev) => ({
-                    ...prev,
-                    CollectorConfig: {
-                      ...prev.CollectorConfig,
-                      Ports: ports,
-                      DockerImageName: prev.BuilderConfig.collectorName,
-                      Manifest: configYaml,
-                    },
-                  }));
-                  setOpenPopup(false);
-                  redirect("/preview");
-                }}
-                className="inline-flex w-full justify-center rounded-md bg-blue-600 px-4 py-2.5 text-base font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:col-start-2"
+                onClick={handleApplyClick}
+                className="inline-flex w-full justify-center rounded-md bg-blue-600 px-4 py-2.5 text-base font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:col-start-2"
               >
                 Apply Configuration
               </button>
@@ -287,13 +293,8 @@ export default function CollectorConfigPopup({
           </DialogPanel>
         </div>
       </div>
-      <Notification
-        type="warning"
-        heading="Invalid Configuration"
-        description="Ports must be integers, separated by commas (e.g., 4317,4318) and not be empty."
-        showNotification={showConfigWarning}
-        setShowNotification={setShowConfigWarning}
-      />
+        <CollectorConfigWarningPopup type="warning" heading={"Invalid Configuration"} description={"Ports must be integers, separated by commas (e.g., 4317,4318) and not be empty."} buttonText={"Back"} open={showConfigWarning} setOpenPopup={setShowConfigWarning} />
+        <CollectorConfigWarningPopup type="warning" heading={"No Components Selected"} description={"Please select at least one component for your collector."} buttonText={"Back"} open={showNoSelectionWarning} setOpenPopup={setShowNoSelectionWarning} />
     </Dialog>
   );
 }

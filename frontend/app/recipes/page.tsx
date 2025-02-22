@@ -22,7 +22,7 @@ export default async function Recipes() {
             Recipe Collection
           </h2>
           <div className="text-md text-muted-foreground mt-1">
-            Collection of commonly used otel collector configurations. From the
+            Collection of commonly used OpenTelemetry collector configurations. From the
             community - for the community.
           </div>
         </div>

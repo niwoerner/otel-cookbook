@@ -10,8 +10,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { basicSetup } from "codemirror";
 import { useAtom } from "jotai";
 import { Check, Clipboard } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import useSWR from "swr";
 import { Button } from "../../../components/button";
@@ -22,7 +21,7 @@ import {
   isNoComponentsSelected,
   OtelCollector,
 } from "../../models/otel.builder.config.model";
-
+import ConfirmationPopup from "./confirmation-popup";
 // SWR fetcher
 async function fetchBuilderConfig(collector: OtelCollector) {
   const response = apiClient<string>(postOtelcolBuilderConfig, {
@@ -76,10 +75,9 @@ export const YamlPreview = () => {
   const [runConfigYaml, setRunConfigYaml] = useState<string>("");
   const [otelCollector] = useAtom(otelCollectorAtom);
 
-  const router = useRouter();
   if (isNoComponentsSelected(otelCollector)) {
     console.warn("Otel collector is empty. Redirecting to Generate page.");
-    router.push("/");
+    redirect("/");
   }
 
   // Only fetch if we have a valid collector (not null/undefined)
@@ -123,6 +121,12 @@ export const YamlPreview = () => {
     }
   };
 
+  const [openPopup, setOpenPopup] = useState(false)
+
+  const handleBackButtonClick = () => {
+    setOpenPopup(true)
+  }
+
   return (
     <div className="w-full h-full mx-auto min-h-screen">
       {/* Card header */}
@@ -133,14 +137,13 @@ export const YamlPreview = () => {
           </h2>
         </div>
         <div className="mt-4 flex md:ml-4 md:mt-0">
-          <Link href="/">
             <button
               type="button"
               className="inline-flex items-center rounded-md bg-white px-3 py-2 text-md font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              onClick={handleBackButtonClick}
             >
               Back
             </button>
-          </Link>
 
           <button
             type="button"
@@ -230,6 +233,7 @@ export const YamlPreview = () => {
           </CardContent>
         </Suspense>
       </div>
+      <ConfirmationPopup open={openPopup} setOpenPopup={setOpenPopup} />
     </div>
   );
 };

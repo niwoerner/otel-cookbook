@@ -59,7 +59,7 @@ export default async function Dashboard() {
         </div>
       </div>
       <div className="flex flex-col md:flex-row gap-4 mt-2">
-        <div className="flex-1 border border-gray-300 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+        <div className="w-full md:w-[35%] border border-gray-300 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
           <CollectorConfigInputSection />
         </div>
         <div className="w-full md:w-[65%] min-w-0 border border-gray-300 rounded-lg p-4 pb-6 shadow-sm hover:shadow-md transition-shadow">

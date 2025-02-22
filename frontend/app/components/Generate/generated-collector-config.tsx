@@ -21,7 +21,7 @@ import {
   isNoComponentsSelected,
   OtelCollector,
 } from "../../models/otel.builder.config.model";
-import ConfirmationPopup from "./confirmation-popup";
+import ConfirmationPopup from "./collector-config-dismiss-confirmation-popup";
 // SWR fetcher
 async function fetchBuilderConfig(collector: OtelCollector) {
   const response = apiClient<string>(postOtelcolBuilderConfig, {

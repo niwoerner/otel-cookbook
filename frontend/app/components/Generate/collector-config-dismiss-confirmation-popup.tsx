@@ -43,7 +43,7 @@ export default function ConfirmationPopup({ open, setOpenPopup }: ConfirmationPo
                 </DialogTitle>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
-                    Are you sure you want to navigate back to the <span className="font-semibold">generate</span> page? Your data <span className="font-semibold">won't be saved</span> and you will have to regenerate the config.
+                    Are you sure you want to navigate back to the <span className="font-semibold">generate</span> page? Your data <span className="font-semibold">won&apos;t be saved</span> and you will have to regenerate the config.
                   </p>
                 </div>
               </div>

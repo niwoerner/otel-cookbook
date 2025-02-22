@@ -66,7 +66,7 @@ export default function DashboardSidebar({ DashboardContent }: PageProps) {
         <Dialog
           open={sidebarOpen}
           onClose={setSidebarOpen}
-          className="relative z-50 lg:hidden"
+          className="relative z-50 2xl:hidden"
         >
           <DialogBackdrop
             transition
@@ -164,7 +164,7 @@ export default function DashboardSidebar({ DashboardContent }: PageProps) {
         </Dialog>
 
         {/* Static sidebar for desktop */}
-        <div className="hidden lg:fixed lg:inset-y-0 lg:z-49 lg:flex lg:w-72 lg:flex-col">
+        <div className="hidden 2xl:fixed 2xl:inset-y-0 2xl:z-49 2xl:flex 2xl:w-72 2xl:flex-col">
           {/* Sidebar component */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r  border-gray-200  px-6 ">
             <div
@@ -258,11 +258,11 @@ export default function DashboardSidebar({ DashboardContent }: PageProps) {
           </div>
         </div>
 
-        <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">
+        <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 2xl:hidden">
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
-            className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+            className="-m-2.5 p-2.5 text-gray-700 2xl:hidden"
           >
             <span className="sr-only">Open sidebar</span>
             <Bars3Icon aria-hidden="true" className="size-6" />
@@ -270,26 +270,29 @@ export default function DashboardSidebar({ DashboardContent }: PageProps) {
           <div className="flex-1 text-sm/6 font-semibold text-gray-900"></div>
           <a href={otelBuilderGHRepo}>
             <span className="sr-only">Your profile</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-github size-8 rounded-full"
+            <div
+              className="flex shrink-0 items-center hover:cursor-pointer "
+              onClick={() => {
+                redirect("/");
+              }}
             >
-              <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-              <path d="M9 18c-4.51 2-5-2-7-2" />
-            </svg>
+              <Image
+                src="/opentelemetry-logo.svg"
+                width={32}
+                height={32}
+                alt="Picture of the author"
+              />
+              <h1 className="pl-2 items-center text-xl font-semibold text-gray-900">
+                Otel {""}
+                <span className="text-[#ffaf00]">Cook</span>
+                <span className="text-[#425cc7]">book</span>
+              </h1>
+            </div>
           </a>
         </div>
 
-        <main className="pb-8 pt-4 lg:pl-72">
-          <div className="px-4 sm:px-6 lg:px-8">{DashboardContent}</div>
+        <main className="pb-8 pt-4 2xl:pl-72">
+          <div className="px-4 sm:px-6 2xl:px-8">{DashboardContent}</div>
         </main>
       </div>
     </>

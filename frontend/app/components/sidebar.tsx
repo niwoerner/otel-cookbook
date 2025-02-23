@@ -70,7 +70,7 @@ export default function DashboardSidebar({ DashboardContent }: PageProps) {
         >
           <DialogBackdrop
             transition
-            className="fixed inset-0  bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
+            className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
           />
 
           <div className="fixed inset-0 flex">
@@ -164,7 +164,7 @@ export default function DashboardSidebar({ DashboardContent }: PageProps) {
         </Dialog>
 
         {/* Static sidebar for desktop */}
-        <div className="hidden 2xl:fixed 2xl:inset-y-0 2xl:z-49 2xl:flex 2xl:w-72 2xl:flex-col">
+        <div className="hidden 2xl:fixed 2xl:inset-y-0 2xl:z-40 2xl:flex 2xl:w-72 2xl:flex-col">
           {/* Sidebar component */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r  border-gray-200  px-6 ">
             <div

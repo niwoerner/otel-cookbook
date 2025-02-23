@@ -85,7 +85,7 @@ export default function RecipeDetailsDrawer({
   }, [currentImageIndex]);
 
   return (
-    <Dialog open={showDrawer} onClose={setShowDrawer} className="relative z-10">
+    <Dialog open={showDrawer} onClose={setShowDrawer} className="relative z-50">
       <DialogBackdrop
         transition
         className="fixed inset-0 bg-gray-500/75  transition-opacity duration-500 ease-in-out data-[closed]:opacity-0"

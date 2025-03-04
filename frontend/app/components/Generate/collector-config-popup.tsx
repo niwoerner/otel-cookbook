@@ -21,7 +21,6 @@ import {
   validateCollectorConfig,
 } from "./collector-config-validation";
 import CollectorConfigWarningPopup from "./collector-config-warning-popup";
-import { IOtelConfig } from "./collector-validation-json-schema";
 
 interface CollectorConfigPopupProps {
   openPopup: boolean;

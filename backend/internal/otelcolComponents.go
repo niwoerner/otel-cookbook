@@ -152,9 +152,7 @@ func (occ OtelCollectorComponents) processComponent(module string, componentType
 
 		// Strip off the component type if it exists in the name
 		componentTypeLower := strings.ToLower(componentType)
-		if strings.HasSuffix(componentName, componentTypeLower) {
-			componentName = strings.TrimSuffix(componentName, componentTypeLower)
-		}
+		componentName = strings.TrimSuffix(componentName, componentTypeLower)
 
 		if componentType == "Provider" {
 			repoUrl = fmt.Sprintf("%s/tree/main/confmap/%s/%s", repoUrl, strings.ToLower(componentType), componentName)

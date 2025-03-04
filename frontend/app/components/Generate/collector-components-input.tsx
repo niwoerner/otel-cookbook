@@ -75,7 +75,7 @@ export default function CollectorConfigInputSection() {
           Selected Components
         </h1>
       </div>
-      <div className="space-y-6 overflow-auto max-h-[500px] px-1 sm:px-2">
+      <div className="space-y-6 overflow-auto md:max-h-[33vh] sm:max-h-[25vh] px-1 sm:px-2">
         {(() => {
           const componentSections = [
             { title: "Receivers", items: builderConfig.Receivers },
@@ -126,7 +126,7 @@ export default function CollectorConfigInputSection() {
                         <DropdownButton
                           plain
                           aria-label="More options"
-                          className="hover:bg-gray-100 p-2 rounded-full"
+                          className="hover:bg-gray-100 hover:cursor-pointer p-2 rounded-full"
                         >
                           <EllipsisHorizontalIcon className="w-5 h-5 text-gray-500" />
                         </DropdownButton>

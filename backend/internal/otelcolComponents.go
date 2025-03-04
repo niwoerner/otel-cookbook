@@ -149,11 +149,19 @@ func (occ OtelCollectorComponents) processComponent(module string, componentType
 	var componentName string
 	if repoUrl != "unknown" {
 		componentName = moduleUrl[strings.LastIndex(moduleUrl, "/")+1:] //this gives the position of the last "/" in e.g " go.opentelemetry.io/collector/exporter/debugexporter" -> used to extract component name
+
+		// Strip off the component type if it exists in the name
+		componentTypeLower := strings.ToLower(componentType)
+		if strings.HasSuffix(componentName, componentTypeLower) {
+			componentName = strings.TrimSuffix(componentName, componentTypeLower)
+		}
+
 		if componentType == "Provider" {
 			repoUrl = fmt.Sprintf("%s/tree/main/confmap/%s/%s", repoUrl, strings.ToLower(componentType), componentName)
 		} else {
 			repoUrl = fmt.Sprintf("%s/tree/main/%s/%s", repoUrl, strings.ToLower(componentType), componentName)
 		}
+
 	}
 
 	if len(parsedModule) == 2 {

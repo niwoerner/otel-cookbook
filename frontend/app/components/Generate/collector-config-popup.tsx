@@ -15,8 +15,13 @@ import CodeMirror from "@uiw/react-codemirror";
 import { useAtom } from "jotai";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
-import { validateCollectorConfig } from "./collector-config-validation";
+import {
+  checkComponentsConfigured,
+  parseCollectorConfigComponents,
+  validateCollectorConfig,
+} from "./collector-config-validation";
 import CollectorConfigWarningPopup from "./collector-config-warning-popup";
+import { IOtelConfig } from "./collector-validation-json-schema";
 
 interface CollectorConfigPopupProps {
   openPopup: boolean;
@@ -73,6 +78,9 @@ export default function CollectorConfigPopup({
   openPopup,
   setOpenPopup,
 }: CollectorConfigPopupProps) {
+  const [parsedComponents, setParsedComponents] = useState<IOtelConfig | null>(
+    null
+  );
   const [lintErrors, setLintErrors] = useState<Diagnostic[]>([]);
   const lintExtension = linter(() => lintErrors);
   const [otelCollector, setOtelCollector] = useAtom(otelCollectorAtom);
@@ -99,7 +107,6 @@ export default function CollectorConfigPopup({
 
   const handleCodeChange = (code: string) => {
     setConfigYaml(code);
-
     validateCollectorConfig({
       yaml: code,
       setLintErrors,
@@ -130,7 +137,31 @@ export default function CollectorConfigPopup({
     }
   };
 
+  const handleApplyConfiguration = () => {
+    setOtelCollector((prev) => ({
+      ...prev,
+      CollectorConfig: {
+        ...prev.CollectorConfig,
+        Ports: ports,
+        DockerImageName: prev.BuilderConfig.collectorName,
+        Manifest: configYaml,
+      },
+    }));
+    setOpenPopup(false);
+    redirect("/preview");
+  };
+
   const [showNoSelectionWarning, setShowNoSelectionWarning] = useState(false);
+  const [missingInBuilderConfig, setMissingInBuilderConfig] = useState(false);
+  const [missingInCollectorConfig, setMissingInCollectorConfig] =
+    useState(false);
+  const [missingBuilderComponents, setMissingBuilderComponents] = useState<
+    Record<string, string[]>
+  >({});
+  const [missingCollectorComponents, setMissingCollectorComponents] = useState<
+    Record<string, string[]>
+  >({});
+
   const handleApplyClick = () => {
     if (
       isNoComponentsSelected(otelCollector) &&
@@ -138,22 +169,31 @@ export default function CollectorConfigPopup({
     ) {
       setShowNoSelectionWarning(true);
     } else {
-      setOtelCollector((prev) => ({
-        ...prev,
-        CollectorConfig: {
-          ...prev.CollectorConfig,
-          Ports: ports,
-          DockerImageName: prev.BuilderConfig.collectorName,
-          Manifest: configYaml,
-        },
-      }));
-      setOpenPopup(false);
-      redirect("/preview");
+      const parsedComponents = parseCollectorConfigComponents({
+        yaml: configYaml,
+      });
+      setParsedComponents(parsedComponents);
+      const {
+        isMissingInBuilderConfig,
+        isMissingInCollectorConfig,
+        missingInBuilderConfig,
+        missingInCollectorConfig,
+      } = checkComponentsConfigured(parsedComponents, otelCollector);
+
+      if (isMissingInBuilderConfig) {
+        setMissingInBuilderConfig(true);
+        setMissingBuilderComponents(missingInBuilderConfig);
+      } else if (isMissingInCollectorConfig) {
+        setMissingInCollectorConfig(true);
+        setMissingCollectorComponents(missingInCollectorConfig);
+      } else {
+        handleApplyConfiguration();
+      }
     }
   };
 
   return (
-    <Dialog open={openPopup} onClose={setOpenPopup} className="relative z-10">
+    <Dialog open={openPopup} onClose={setOpenPopup} className="relative z-50">
       <DialogBackdrop
         transition
         className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
@@ -293,8 +333,48 @@ export default function CollectorConfigPopup({
           </DialogPanel>
         </div>
       </div>
-        <CollectorConfigWarningPopup type="warning" heading={"Invalid Configuration"} description={"Ports must be integers, separated by commas (e.g., 4317,4318) and not be empty."} buttonText={"Back"} open={showConfigWarning} setOpenPopup={setShowConfigWarning} />
-        <CollectorConfigWarningPopup type="warning" heading={"No Components Selected"} description={"Please select at least one component for your collector."} buttonText={"Back"} open={showNoSelectionWarning} setOpenPopup={setShowNoSelectionWarning} />
+      <CollectorConfigWarningPopup
+        type="warning"
+        heading={"Invalid Configuration"}
+        description={
+          "Ports must be integers, separated by commas (e.g., 4317,4318) and not be empty."
+        }
+        buttonText={"Back"}
+        open={showConfigWarning}
+        setOpenPopup={setShowConfigWarning}
+      />
+      <CollectorConfigWarningPopup
+        type="warning"
+        heading="No Components Selected"
+        description="You have not selected any components. Please select at least one component to continue."
+        buttonText="Back"
+        open={showNoSelectionWarning}
+        setOpenPopup={setShowNoSelectionWarning}
+      />
+      <CollectorConfigWarningPopup
+        type="warning"
+        heading="Missing Components in Builder Config"
+        description="Some components in the Collector config are not selected in the builder. This may cause unexpected behavior."
+        buttonText="Back"
+        allowContinue={true}
+        onContinue={handleApplyConfiguration}
+        continueButtonText="Continue"
+        open={missingInBuilderConfig}
+        setOpenPopup={setMissingInBuilderConfig}
+        missingInBuilderConfig={missingBuilderComponents}
+      />
+      <CollectorConfigWarningPopup
+        type="warning"
+        heading="Missing Components in Collector Config"
+        description="Some components are configured in the builder config but not in the collector. This may cause unexpected behavior."
+        buttonText="Back"
+        allowContinue={true}
+        onContinue={handleApplyConfiguration}
+        continueButtonText="Continue"
+        open={missingInCollectorConfig}
+        setOpenPopup={setMissingInCollectorConfig}
+        missingInCollectorConfig={missingCollectorComponents}
+      />
     </Dialog>
   );
 }

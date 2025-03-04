@@ -33,6 +33,7 @@ export interface IOtelConfig {
 	extensions: object;
 	service: IService;
 	connectors: object;
+	providers: object; 
 }
 
 // @ts-expect-error TypeScript cannot correctly correlate the schema with the TypeScript types.

@@ -75,7 +75,7 @@ export default function OtelCollectorComponentsTable({
       table.getExpandedRowModel().rows.forEach((row: Row<OtelComponent>) => {
         const { type, name } = row.original;
 
-        if (type === "Receiver" && name === "otlpreceiver") {
+        if (type === "Receiver" && name === "otlp") {
           newState = updateCollectorState(
             newState,
             "Receiver",
@@ -84,7 +84,7 @@ export default function OtelCollectorComponentsTable({
           );
         }
 
-        if (type === "Exporter" && name === "debugexporter") {
+        if (type === "Exporter" && name === "debug") {
           newState = updateCollectorState(
             newState,
             "Exporter",
@@ -175,7 +175,7 @@ export default function OtelCollectorComponentsTable({
 
           return (
             <Dropdown>
-              <DropdownButton plain aria-label="More options">
+              <DropdownButton className="hover:cursor-pointer" plain aria-label="More options">
                 <EllipsisHorizontalIcon />
               </DropdownButton>
               <DropdownMenu>

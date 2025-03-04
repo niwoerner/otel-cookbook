@@ -78,9 +78,6 @@ export default function CollectorConfigPopup({
   openPopup,
   setOpenPopup,
 }: CollectorConfigPopupProps) {
-  const [parsedComponents, setParsedComponents] = useState<IOtelConfig | null>(
-    null
-  );
   const [lintErrors, setLintErrors] = useState<Diagnostic[]>([]);
   const lintExtension = linter(() => lintErrors);
   const [otelCollector, setOtelCollector] = useAtom(otelCollectorAtom);
@@ -172,7 +169,6 @@ export default function CollectorConfigPopup({
       const parsedComponents = parseCollectorConfigComponents({
         yaml: configYaml,
       });
-      setParsedComponents(parsedComponents);
       const {
         isMissingInBuilderConfig,
         isMissingInCollectorConfig,

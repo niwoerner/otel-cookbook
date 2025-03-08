@@ -112,10 +112,27 @@ export default function RecipeDetailsDrawer({
               </TransitionChild>
               <div className="h-full overflow-y-auto bg-white p-8">
                 <div className="space-y-6 pb-16">
-                  <div className="border-b border-gray-200 pb-5">
+                  <div className="border-b border-gray-200 pb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
                     <h1 className="text-2xl font-semibold text-gray-900">
                       🍴 Cooking Instructions 🍴
                     </h1>
+                    <div className="flex gap-3 w-full sm:w-auto">
+                      <button
+                        type="button"
+                        className="flex-1 sm:flex-none rounded-md bg-blue-600 px-4 sm:px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:min-w-[120px]"
+                        onClick={() => handleUseRecipeClick()}
+                      >
+                        Use Recipe
+                      </button>
+                      <button
+                        type="button"
+                        className="flex-1 sm:flex-none rounded-md bg-white px-4 sm:px-6 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:min-w-[120px]"
+                      >
+                        <a href={recipeDetails.githubRepoUrl} target="_blank">
+                          View in GitHub
+                        </a>
+                      </button>
+                    </div>
                   </div>
                   <div>
                     {recipeDetails.images &&

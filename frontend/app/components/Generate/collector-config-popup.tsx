@@ -341,7 +341,7 @@ export default function CollectorConfigPopup({
       <CollectorConfigWarningPopup
         type="warning"
         heading="No Components Selected"
-        description="You have not selected any components. Please select at least one component to continue."
+        description="You have not selected any components in the builder-config. Please select at least one component to continue."
         buttonText="Back"
         open={showNoSelectionWarning}
         setOpenPopup={setShowNoSelectionWarning}
@@ -349,19 +349,19 @@ export default function CollectorConfigPopup({
       <CollectorConfigWarningPopup
         type="warning"
         heading="Missing Components in Builder Config"
-        description="Some components in the Collector config are not selected in the builder. This may cause unexpected behavior."
+        description="Some components in the collector-config are not present in the builder-config. The collector will fail to start without them."
         buttonText="Back"
         allowContinue={true}
         onContinue={handleApplyConfiguration}
-        continueButtonText="Continue"
+        continueButtonText="Continue Anyway"
         open={missingInBuilderConfig}
         setOpenPopup={setMissingInBuilderConfig}
         missingInBuilderConfig={missingBuilderComponents}
       />
       <CollectorConfigWarningPopup
         type="warning"
-        heading="Missing Components in Collector Config"
-        description="Some components are configured in the builder config but not in the collector. This may cause unexpected behavior."
+        heading="Unused Components"
+        description="Some components are configured in the builder-config but not in the collector-config. They will be unused."
         buttonText="Back"
         allowContinue={true}
         onContinue={handleApplyConfiguration}

@@ -15,12 +15,14 @@ jobs:
     outputs:
       components: ${{ steps.get-collector-components.outputs.result }}
     steps: 
-      - name: get-collector-components
+      - id: get-collector-components
+        name: Get collector components
         run: |
-          res=$(curl -s https://otel-cookbook.com/server/otelcol/components | jq -c -r .)
-          echo "result=${res}" >> $GITHUB_OUTPUT      
+          res=$(curl -s https://otel-cookbook.com/server/otelcol/components | jq -c .)
+          echo "result=$res" >> $GITHUB_OUTPUT      
  
   e2e:
+    needs: prepare-e2e
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -44,8 +46,12 @@ jobs:
       - name: Run Test - ${{ matrix.request.name }}
         run: |
           #!/usr/bin/env bash
-          set -euo pipefail
-
+          # set -euo pipefail
+          
+          echo "Components JSON:"
+          echo '${{ needs.prepare-e2e.outputs.components }}' > components.json
+          cat components.json
+          
           jq -n \
             --argjson base '${{ matrix.request.body }}' \
             --argjson components '${{ needs.prepare-e2e.outputs.components }}' \

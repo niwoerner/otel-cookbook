@@ -26,15 +26,15 @@ jobs:
       matrix:
         request:
           - name: binary-debug-mode-default-components
-            body: >
+            body: >-
               {"BuilderConfig":{"collectorName":"my-otel-collector","version":"","description":"collector description","outputPath":"./otelcol-dev","debugMode":true,"runConfig":"binary"},"CollectorConfig":{"Ports":"4317","DockerImageName":"my-otel-collector","Manifest":"# Minimal OpenTelemetry Collector Configuration\nreceivers:\n  otlp:\n    protocols:\n      grpc: # Enables OTLP over gRPC on the default port 4317\n      http: # Enables OTLP over HTTP on the default port 4318\n\nexporters:\n  debug:\n    verbosity: detailed\n\nservice:\n  pipelines:\n    traces:\n      receivers: [otlp]\n      exporters: [debug]\n    metrics:\n      receivers: [otlp]\n      exporters: [debug]\n    logs:\n      receivers: [otlp]\n      exporters: [debug]"}}
 
           - name: binary-debug-mode-all-components
-            body: >
+            body: >-
               {"BuilderConfig":{"collectorName":"my-otel-collector","version":"","description":"collector description","outputPath":"./otelcol-dev","debugMode":true,"runConfig":"binary"},"CollectorConfig":{"Ports":"4317","DockerImageName":"my-otel-collector","Manifest":"# Minimal OpenTelemetry Collector Configuration\nreceivers:\n  otlp:\n    protocols:\n      grpc: # Enables OTLP over gRPC on the default port 4317\n      http: # Enables OTLP over HTTP on the default port 4318\n\nexporters:\n  debug:\n    verbosity: detailed\n\nservice:\n  pipelines:\n    traces:\n      receivers: [otlp]\n      exporters: [debug]\n    metrics:\n      receivers: [otlp]\n      exporters: [debug]\n    logs:\n      receivers: [otlp]\n      exporters: [debug]"}}
 
           - name: docker-debug-mode-default-components
-            body: >
+            body: >-
               {"BuilderConfig":{"collectorName":"my-otel-collector","version":"","description":"collector description","outputPath":"./otelcol-dev","debugMode":true,"runConfig":"docker"},"CollectorConfig":{"Ports":"4317","DockerImageName":"my-otel-collector","Manifest":"# Minimal OpenTelemetry Collector Configuration\nreceivers:\n  otlp:\n    protocols:\n      grpc: \n        endpoint: \"0.0.0.0:4317\"\n      http: \n        endpoint: \"0.0.0.0:4318\"\n\nexporters:\n  debug:\n    verbosity: detailed\n\nservice:\n  pipelines:\n    traces:\n      receivers: [otlp]\n      exporters: [debug]\n    metrics:\n      receivers: [otlp]\n      exporters: [debug]\n    logs:\n      receivers: [otlp]\n      exporters: [debug]"}}
 
     steps:

@@ -42,21 +42,6 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  nginx:
-    image: nginx:1.27-alpine
-    container_name: nginx
-    depends_on:
-      - frontend
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/certs:/etc/nginx/certs
-    restart: always
-    networks:
-      - app-network
-
 networks:
   app-network:
     driver: bridge

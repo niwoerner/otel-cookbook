@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import RecipeOverviewWizard from "../../components/Recipes/wizard";
 import DashboardSidebar from "../../components/sidebar";
 import { getRecipeWizardDetails } from "../recipe-gh-data";
@@ -10,9 +10,8 @@ export default async function RecipeWizard({
 }) {
   const urlParams = await searchParams;
   const recipeName = urlParams.name as string;
-  const router = useRouter();
   if (!recipeName) {
-    router.push("/recipes");
+    redirect("/recipes");
   }
   const recipe = await getRecipeWizardDetails(recipeName);;
 

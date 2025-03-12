@@ -16,7 +16,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const navigationItems = [
@@ -31,7 +31,8 @@ type PageProps = {
 
 export default function DashboardSidebar({ DashboardContent }: PageProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  const router = useRouter();
+  
   const getCurrentPath = () => {
     if (typeof window !== "undefined") {
       return window.location.pathname;
@@ -98,7 +99,7 @@ export default function DashboardSidebar({ DashboardContent }: PageProps) {
                 <div
                   className="flex h-16 shrink-0 items-center  hover:cursor-pointer"
                   onClick={() => {
-                    redirect("/");
+                    router.push("/");
                   }}
                 >
                   <Image
@@ -170,7 +171,7 @@ export default function DashboardSidebar({ DashboardContent }: PageProps) {
             <div
               className="flex h-16 shrink-0 items-center hover:cursor-pointer "
               onClick={() => {
-                redirect("/");
+                router.push("/");
               }}
             >
               <Image
@@ -273,7 +274,7 @@ export default function DashboardSidebar({ DashboardContent }: PageProps) {
             <div
               className="flex shrink-0 items-center hover:cursor-pointer "
               onClick={() => {
-                redirect("/");
+                router.push("/");
               }}
             >
               <Image

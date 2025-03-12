@@ -13,7 +13,7 @@ import { CogIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { dracula } from "@uiw/codemirror-theme-dracula";
 import CodeMirror from "@uiw/react-codemirror";
 import { useAtom } from "jotai";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   checkComponentsConfigured,
@@ -86,7 +86,7 @@ export default function CollectorConfigPopup({
     otelCollector.BuilderConfig.collectorName
   );
   const [showConfigWarning, setShowConfigWarning] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     // only overwrite if the default config is in place - we don't want to overwrite user input when debug mode gets changed
     if (
@@ -144,7 +144,7 @@ export default function CollectorConfigPopup({
       },
     }));
     setOpenPopup(false);
-    redirect("/preview");
+    router.push("/preview");
   };
 
   const [showNoSelectionWarning, setShowNoSelectionWarning] = useState(false);

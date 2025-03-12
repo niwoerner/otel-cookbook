@@ -2,7 +2,7 @@
 
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 import { ExclamationTriangleIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 interface ConfirmationPopupProps {
     open: boolean;
@@ -10,6 +10,7 @@ interface ConfirmationPopupProps {
   }
   
 export default function ConfirmationPopup({ open, setOpenPopup }: ConfirmationPopupProps) {
+  const router = useRouter();
   return (
     <Dialog open={open} onClose={setOpenPopup} className="relative z-10">
       <DialogBackdrop
@@ -51,7 +52,7 @@ export default function ConfirmationPopup({ open, setOpenPopup }: ConfirmationPo
             <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
               <button
                 type="button"
-                onClick={() => redirect("/")}
+                onClick={() => router.push("/")}
                 className="inline-flex w-full justify-center rounded-md bg-amber-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-amber-700 sm:ml-3 sm:w-auto"
               >
                 Dismiss

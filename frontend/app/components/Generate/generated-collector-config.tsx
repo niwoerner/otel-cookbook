@@ -10,7 +10,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { basicSetup } from "codemirror";
 import { useAtom } from "jotai";
 import { Check, Clipboard } from "lucide-react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import useSWR from "swr";
 import { Button } from "../../../components/button";
@@ -74,10 +74,11 @@ export const YamlPreview = () => {
   const [builderYaml, setBuilderYaml] = useState<string>("");
   const [runConfigYaml, setRunConfigYaml] = useState<string>("");
   const [otelCollector] = useAtom(otelCollectorAtom);
-
+  const router = useRouter();
+  
   if (isNoComponentsSelected(otelCollector)) {
     console.warn("Otel collector is empty. Redirecting to Generate page.");
-    redirect("/");
+    router.push("/");
   }
 
   // Only fetch if we have a valid collector (not null/undefined)

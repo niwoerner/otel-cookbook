@@ -19,10 +19,9 @@ esac
 
 builder --config=otelcol-builder.yaml --ldflags="$LDFLAGS" --verbose
 
-{{if .BuilderConfig.DebugMode -}}
 cat > otelcol.yaml <<EOF
 {{.CollectorConfig.Manifest}}
-EOF{{ end }}
+EOF
 
 {{if eq .BuilderConfig.RunConfig "binary"}}
 {{template "runConfigBinary" .}}

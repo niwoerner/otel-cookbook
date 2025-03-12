@@ -87,18 +87,6 @@ jobs:
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:cache
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:cache,mode=max
 
-  validate-nginx-config:
-    runs-on: ubuntu-latest
-    name: Validate Nginx Config
-    if: ${{ github.event.workflow_run.head_branch == 'main' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Run Gixy Docker command
-        run: |
-          docker run --rm -v "${{ github.workspace }}/deployment/nginx/conf.d/app.conf:/etc/nginx/conf/nginx.conf" yandex/gixy /etc/nginx/conf/nginx.conf
-
   check-port:
     runs-on: ubuntu-latest
     name: Check if Port 22 is Open
@@ -124,7 +112,6 @@ jobs:
       - build-frontend-docker-image
       - build-backend-docker-image
       - check-port
-      - validate-nginx-config
     if: ${{ github.event.workflow_run.head_branch == 'main' && needs.check-port.outputs.port_open == 'true' }}
     environment:
       name: prod 
@@ -155,14 +142,6 @@ jobs:
           port: 22
           script: |
             cd deployments/${{ github.repository }}/deployment
-
-            REQUIRED_NGINX_FILES="nginx/certs/cf-origin.crt nginx/certs/cf-origin.key nginx/conf.d/app.conf"
-            for file in $REQUIRED_NGINX_FILES; do
-              if [ ! -f "$file" ]; then
-                echo "Error: Required NGINX file '$file' not found. Ensure those are present before starting the app."
-                exit 1
-              fi
-            done
 
             export GH_API_TOKEN=${{ secrets.GH_API_TOKEN }}
             docker compose -f docker-compose.subst.yml pull

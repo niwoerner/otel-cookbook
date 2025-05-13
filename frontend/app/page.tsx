@@ -2,9 +2,9 @@ import { apiClient } from "@/lib/apiClient";
 import DashboardSidebar from "./components/sidebar";
 
 import { getOtelcolComponents } from "@/lib/const";
-import RunConfigSection from "./components/Generate/collector-run-config";
-import CollectorConfigInputSection from "./components/Generate/collector-components-input";
-import OtelCollectorComponentsTable from "./components/Generate/collector-components-table";
+import RunConfigSection from "./components/Cook/collector-run-config";
+import CollectorConfigInputSection from "./components/Cook/collector-components-input";
+import OtelCollectorComponentsTable from "./components/Cook/collector-components-table";
 import {
   OtelCollector,
   OtelComponent,

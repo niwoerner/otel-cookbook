@@ -13,8 +13,8 @@ export const Docs = () => {
               This project is <span className="text-red-400">not</span>{" "}
               officially affiliated with the CNCF&apos;s OpenTelemetry project
               and was created <span className="text-red-400">just for fun</span>
-              . If you like this tool or have any suggestions/feedback, please
-              reach out in Github. #ToDo: add repo link here :)
+              . If you have any suggestions/feedback, please
+              reach out via an issue in <Link href="https://github.com/niwoerner/otel-cookbook" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Github</Link>.
               <br></br>
               <br></br>
             </span>
@@ -40,7 +40,7 @@ export const Docs = () => {
         <main className="mt-10">
           <section className="mb-10">
             <h3 className="text-xl font-semibold text-gray-900 sm:text-2xl">
-              Generate
+              Cook
             </h3>
             <p className="text-base text-gray-700 mt-4 leading-relaxed">
               Getting started with the OpenTelemetry Collector can feel
@@ -50,8 +50,8 @@ export const Docs = () => {
             </p>
             <p className="text-base text-gray-700 mt-4 leading-relaxed">
               The{" "}
-              <Link href="/generate" className="text-blue-600 hover:underline">
-                Generate{" "}
+              <Link href="/" className="text-blue-600 hover:underline">
+                Cook{" "}
               </Link>
               page is designed to help you quickly build your first custom
               OpenTelemetry collector with an easy-to-use, guided UI. To get
@@ -99,14 +99,7 @@ export const Docs = () => {
               <Link className="text-blue-600 hover:underline" href="/recipes">
                 recipes
               </Link>{" "}
-              (naming inspired by{" "}
-              <Link
-                className="text-blue-600 hover:underline"
-                href="https://www.youtube.com/watch?v=UGTU0-KT_60"
-              >
-                this
-              </Link>{" "}
-              great Kubecon presentation) provide a way to easily share
+               provide a way to easily share
               configurations.
               <br></br>
               <br></br>
@@ -115,7 +108,7 @@ export const Docs = () => {
               <br />
               <br />
               To add a recipe, all you need to do is open a pull request{" "}
-              <Link className="text-blue-600 hover:underline" href="/">
+              <Link className="text-blue-600 hover:underline" href="https://github.com/jpkrohling/otelcol-cookbook">
                 here
               </Link>{" "}
               - <span className="font-semibold">Thank you</span> in advance! :)

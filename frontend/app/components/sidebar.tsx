@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const navigationItems = [
-  { name: "Generate", href: "/", icon: WrenchScrewdriverIcon },
+  { name: "Cook", href: "/", icon: WrenchScrewdriverIcon },
   { name: "Recipes", href: "/recipes", icon: FolderIcon },
   { name: "Docs", href: "/docs", icon: DocumentDuplicateIcon },
 ];

@@ -1,5 +1,5 @@
 import DashboardSidebar from "../components/sidebar";
-import { YamlPreview } from "../components/Generate/generated-collector-config";
+import { YamlPreview } from "../components/Cook/generated-collector-config";
 
 export default async function Preview() {
   return (

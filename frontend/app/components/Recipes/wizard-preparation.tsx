@@ -12,7 +12,7 @@ import {
   Clipboard,
 } from "lucide-react";
 import React, { useState, useCallback } from "react";
-import { validateCollectorConfig } from "../Generate/collector-config-validation";
+import { validateCollectorConfig } from "../Cook/collector-config-validation";
 import { extractRecipeSection } from "./wizard";
 import StyledMarkdown from "./recipe-markdown";
 import {

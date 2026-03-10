@@ -72,7 +72,8 @@ func (s *Server) getOtelComponentsHandler(w http.ResponseWriter, r *http.Request
 		manifest = foo.(OtelContribDist)
 	} else {
 		//cache miss
-		resp, err := http.Get(githubManifestUrl)
+		req, _ := http.NewRequestWithContext(r.Context(), "GET", githubManifestUrl, nil)
+		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
 			s.ErrorResponse(w, r, err.Error(), http.StatusInternalServerError)
 			s.logger.Sugar().Errorf("%s: Error retrieving otel collector components from github", getOtelComponentErrMsg)

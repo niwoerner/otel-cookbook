@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/metric"
 )
 
 type BuilderConfig struct {
@@ -52,7 +55,10 @@ func (s *Server) postOtelBuilderConfigHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	s.logger.Info("Successfully generated the otel builder config")
+	s.requestCounter.Add(r.Context(), 1, metric.WithAttributes(
+		attribute.String("status", "success"),
+		attribute.String("operation", "builder_config"),
+	))
 }
 
 func (s *Server) getBuilderUsageHandler(w http.ResponseWriter, r *http.Request) {

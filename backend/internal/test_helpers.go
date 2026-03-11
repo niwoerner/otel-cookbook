@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -11,6 +12,11 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/patrickmn/go-cache"
 	"github.com/stretchr/testify/require"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/metric"
+	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
+	"go.opentelemetry.io/otel/sdk/resource"
+	semconv "go.opentelemetry.io/otel/semconv/v1.7.0"
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v2"
 )
@@ -43,14 +49,34 @@ func NewHttpServerTestHelper(t *testing.T) *TestHelper {
 	db, dbSchema, err := setupDatabase(mockDbName)
 	require.NoError(t, err, "Failed to create mock db")
 
+	// Initialize metrics for tests
+	meterProvider := sdkmetric.NewMeterProvider(
+		sdkmetric.WithResource(resource.NewWithAttributes(
+			semconv.SchemaURL,
+			semconv.ServiceNameKey.String("otel-cookbook-backend-test"),
+		)),
+	)
+	
+	otel.SetMeterProvider(meterProvider)
+	meter := meterProvider.Meter("otel-cookbook-backend-test")
+	
+	requestCounter, err := meter.Int64Counter(
+		"http_requests_total",
+		metric.WithDescription("Total number of HTTP requests"),
+		metric.WithUnit("1"),
+	)
+	require.NoError(t, err, "Failed to create request counter metric")
+
 	srv := &Server{
-		router:    mux.NewRouter(),
-		logger:    logger,
-		config:    config,
-		templates: tmpl,
-		cache:     cache.New(5*time.Minute, 10*time.Minute), //cache expires after 5min and purges expired items after 10min
-		db:        db,
-		dbs:       *dbSchema,
+		router:         mux.NewRouter(),
+		logger:         logger,
+		config:         config,
+		templates:      tmpl,
+		cache:          cache.New(5*time.Minute, 10*time.Minute), //cache expires after 5min and purges expired items after 10min
+		db:             db,
+		dbs:            *dbSchema,
+		meterProvider:  meterProvider,
+		requestCounter: requestCounter,
 	}
 	srv.registerHandlers()
 

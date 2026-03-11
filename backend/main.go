@@ -66,6 +66,6 @@ func main() {
 
 	// graceful shutdown
 	stopCh := server.SetupSignalHandler()
-	sd, _ := server.NewShutdown(srvCfg.ServerShutdownTimeout, logger)
+	sd, _ := server.NewShutdown(srvCfg.ServerShutdownTimeout, logger, srv.GetTracerProvider())
 	sd.Graceful(stopCh, httpSrv)
 }

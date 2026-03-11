@@ -120,3 +120,8 @@ func (s *Server) startServer() *http.Server {
 
 	return srv
 }
+
+// GetTracerProvider returns the TracerProvider for graceful shutdown
+func (s *Server) GetTracerProvider() *sdktrace.TracerProvider {
+	return s.tracerProvider
+}

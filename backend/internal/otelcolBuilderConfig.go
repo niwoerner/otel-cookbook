@@ -47,8 +47,7 @@ func (s *Server) postOtelBuilderConfigHandler(w http.ResponseWriter, r *http.Req
 
 	err = insertIntoTable(s.db, s.dbs.builderUsageTable, sqlValues)
 	if err != nil {
-		s.db.Close()
-		s.logger.Sugar().Errorf("%s: Something went wrong while inserting to db", postOtelBuilderConfigErrMsg)
+		s.logger.Sugar().Errorf("%s: Something went wrong while inserting to db: %v", postOtelBuilderConfigErrMsg, err)
 		return
 	}
 

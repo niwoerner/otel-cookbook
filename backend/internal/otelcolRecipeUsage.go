@@ -55,8 +55,7 @@ func (s *Server) postRecipeUsageHandler(w http.ResponseWriter, r *http.Request) 
 
 	err = insertIntoTable(s.db, s.dbs.recipeUsageTable, sqlValues)
 	if err != nil {
-		s.db.Close()
-		s.logger.Sugar().Errorf("%s: Something went wrong while inserting to db", postRecipeUsageErrMsg)
+		s.logger.Sugar().Errorf("%s: Something went wrong while inserting to db: %v", postRecipeUsageErrMsg, err)
 		return
 	}
 

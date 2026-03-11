@@ -10,6 +10,8 @@ import (
 
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/metric"
+	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 
 	"github.com/gorilla/mux"
 	"github.com/patrickmn/go-cache"
@@ -32,6 +34,10 @@ type Server struct {
 	templates      *template.Template
 	tracer         trace.Tracer
 	tracerProvider *sdktrace.TracerProvider
+
+	//Metrics
+	meterProvider  *sdkmetric.MeterProvider
+	requestCounter metric.Int64Counter
 
 	//Database
 	db  *sql.DB
@@ -68,6 +74,7 @@ func (s *Server) ListenAndServe() *http.Server {
 	ctx := context.Background()
 
 	s.initTracer(ctx)
+	s.initMetrics(ctx)
 	s.registerHandlers()
 	s.registerMiddlewares()
 

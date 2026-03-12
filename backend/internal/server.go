@@ -91,8 +91,8 @@ func (s *Server) registerHandlers() {
 }
 
 func (s *Server) registerMiddlewares() {
-	// otel := NewOpenTelemetryMiddleware()
-	// s.router.Use(otel)
+	otel := NewOpenTelemetryMiddleware()
+	s.router.Use(otel)
 
 	httpLogger := NewLoggingMiddleware(s.logger)
 	s.router.Use(httpLogger.Handler)

@@ -1,10 +1,15 @@
 package server
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
+
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/metric"
 )
 
 type BuilderConfig struct {
@@ -21,6 +26,21 @@ const (
 	postOtelBuilderConfigErrMsg = "Error while creating the otel builder config"
 	getBuilderUsageErrMsg       = "Error while returning the otel builder usage"
 )
+
+var requestCounter metric.Int64Counter
+
+func init() {
+	meter := otel.Meter("otel-cookbook-backend")
+	var err error
+	requestCounter, err = meter.Int64Counter(
+		"http_requests_total",
+		metric.WithDescription("Total number of HTTP requests"),
+	)
+	if err != nil {
+		// Handle error - in production you might want to log this properly
+		panic(fmt.Sprintf("failed to create request counter: %v", err))
+	}
+}
 
 func (s *Server) postOtelBuilderConfigHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-yaml")
@@ -76,5 +96,8 @@ func (s *Server) getBuilderUsageHandler(w http.ResponseWriter, r *http.Request) 
 		s.logger.Sugar().Errorf("%s: Error streaming generated YAML output to client", getBuilderUsageErrMsg)
 	}
 
-	s.logger.Info("Successfully saved the otel builder usage")
+	requestCounter.Add(r.Context(), 1, metric.WithAttributes(
+		attribute.String("status", "success"),
+		attribute.String("operation", "builder_usage"),
+	))
 }

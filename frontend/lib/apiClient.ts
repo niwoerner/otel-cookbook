@@ -1,5 +1,4 @@
 import {
-  GH_API_TOKEN,
   NEXT_PUBLIC_BACKEND_URL,
   SERVER_SIDE_BACKEND_URL,
 } from "./const";
@@ -59,12 +58,21 @@ export const apiClient = async <T>(
           : `${SERVER_SIDE_BACKEND_URL}${endpoint}`;
       }
 
-      // Add GitHub token if the request is to the GitHub API
+      // Add GitHub token if the request is to the GitHub API and running server-side
       const isGitHubApi =
         url.includes("api.github.com") ||
         url.includes("raw.githubusercontent.com");
-      if (isGitHubApi && GH_API_TOKEN) {
-        headers.Authorization = `Bearer ${GH_API_TOKEN}`;
+      if (isGitHubApi && serverSide) {
+        try {
+          // Dynamic import to ensure GitHub token is only accessed server-side
+          const { getGitHubApiToken } = await import("./server-env");
+          const token = await getGitHubApiToken();
+          if (token) {
+            headers.Authorization = `Bearer ${token}`;
+          }
+        } catch (error) {
+          console.warn("Failed to load GitHub API token (server-side only):", error);
+        }
       }
 
       let contentTypeHeader: string;

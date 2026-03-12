@@ -8,7 +8,6 @@ export const GHRepoPath = "niwoerner/otel-builder-test";
 // EnvVars
 export const NEXT_PUBLIC_BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8888';  // EnvVars with prefix NEXT_PUBLIC_ will be present client-side, too
 export const SERVER_SIDE_BACKEND_URL = process.env.SERVER_SIDE_BACKEND_URL || 'http://localhost:8888'; 
-export const GH_API_TOKEN = process.env.GH_API_TOKEN || ''; 
 
 // Backend API routes
 const backendBasePath = "/server"

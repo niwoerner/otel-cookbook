@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"go.opentelemetry.io/otel/trace"
 	"gopkg.in/yaml.v2"
 )
 
@@ -70,6 +71,10 @@ func (s *Server) getOtelComponentsHandler(w http.ResponseWriter, r *http.Request
 	foo, found := s.cache.Get("foo")
 	if found {
 		manifest = foo.(OtelContribDist)
+		// Record cache hit as span event
+		if span := trace.SpanFromContext(r.Context()); span != nil {
+			span.AddEvent("cache_hit")
+		}
 	} else {
 		//cache miss
 		resp, err := http.Get(githubManifestUrl)
@@ -96,6 +101,10 @@ func (s *Server) getOtelComponentsHandler(w http.ResponseWriter, r *http.Request
 
 		//cache store
 		s.cache.Set("foo", manifest, cacheDuration)
+		// Record cache miss as span event  
+		if span := trace.SpanFromContext(r.Context()); span != nil {
+			span.AddEvent("cache_miss")
+		}
 	}
 
 	occ.processManifestComponents(manifest)
